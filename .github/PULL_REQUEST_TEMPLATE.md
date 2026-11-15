@@ -1,14 +1,14 @@
 ## Change
 
-<!-- Explain the problem and user-visible result. Link a related issue when applicable. -->
+<!-- Explain what changed and why, including the user-visible result. Link a related issue when applicable. -->
 
 ## Validation
 
-<!-- List what you ran, the results and any validation still pending. -->
+<!-- List the checks you ran and their results. Note any validation still pending. -->
 
 ## Compatibility and release impact
 
-<!-- Note affected platforms, migrations or distribution changes when applicable. -->
+<!-- If applicable, describe affected platforms, artifacts, migrations, compatibility or rollout. -->
 
 ## Evidence
 
