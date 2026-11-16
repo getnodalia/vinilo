@@ -1,11 +1,15 @@
 ## Change
 
-<!-- Explain what changed and why. Link a related issue if there is one. -->
+<!-- Explain what changed and why, including the user-visible result. Link a related issue when applicable. -->
 
-## Verification
+## Validation
 
-<!-- List the checks you ran and their results. Note any checks still pending. -->
+<!-- List the checks you ran and their results. Note any validation still pending. -->
 
-## Release impact
+## Compatibility and release impact
 
-<!-- If applicable, describe affected platforms, artifacts, compatibility or rollout. -->
+<!-- If applicable, describe affected platforms, artifacts, migrations, compatibility or rollout. -->
+
+## Evidence
+
+<!-- Include screenshots, a recording or measurements when they help review the change. -->
