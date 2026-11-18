@@ -2298,7 +2298,7 @@ dependencies = [
 [[package]]
 name = "nodalia-update"
 version = "0.1.0-alpha.1"
-source = "git+https://github.com/danielmigueltejedor/nodalia-design?rev=f71ade677551928eb48467f4c67d96e42267e1f3#f71ade677551928eb48467f4c67d96e42267e1f3"
+source = "git+https://github.com/danielmigueltejedor/nodalia-design?rev=114848a2ff1a7c29c9a5432fb12e955fbe0aeef2#114848a2ff1a7c29c9a5432fb12e955fbe0aeef2"
 dependencies = [
  "serde_json",
  "sha2",

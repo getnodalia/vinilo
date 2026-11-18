@@ -14,8 +14,8 @@
     {
         "type": "git",
         "url": "https://github.com/danielmigueltejedor/nodalia-design",
-        "commit": "f71ade677551928eb48467f4c67d96e42267e1f3",
-        "dest": "flatpak-cargo/git/nodalia-design-f71ade6"
+        "commit": "114848a2ff1a7c29c9a5432fb12e955fbe0aeef2",
+        "dest": "flatpak-cargo/git/nodalia-design-114848a"
     },
     {
         "type": "archive",
@@ -2863,7 +2863,7 @@
     {
         "type": "shell",
         "commands": [
-            "cp -r --reflink=auto \"flatpak-cargo/git/nodalia-design-f71ade6/packages/update/crate\" \"cargo/vendor/nodalia-update\""
+            "cp -r --reflink=auto \"flatpak-cargo/git/nodalia-design-114848a/packages/update/crate\" \"cargo/vendor/nodalia-update\""
         ]
     },
     {
@@ -6533,7 +6533,7 @@
     },
     {
         "type": "inline",
-        "contents": "[source.vendored-sources]\ndirectory = \"cargo/vendor\"\n\n[source.crates-io]\nreplace-with = \"vendored-sources\"\n\n[source.\"https://github.com/danielmigueltejedor/vinilo\"]\ngit = \"https://github.com/danielmigueltejedor/vinilo\"\nreplace-with = \"vendored-sources\"\nrev = \"393463e6a072c8b6fbc046641acf2e0956da4d6e\"\n\n[source.\"https://github.com/danielmigueltejedor/nodalia-design\"]\ngit = \"https://github.com/danielmigueltejedor/nodalia-design\"\nreplace-with = \"vendored-sources\"\nrev = \"d066d5d351f18f704bdfd8aad6f04b9e96a155e4\"\n\n[source.\"nodalia-design-update\"]\ngit = \"https://github.com/danielmigueltejedor/nodalia-design\"\nreplace-with = \"vendored-sources\"\nrev = \"f71ade677551928eb48467f4c67d96e42267e1f3\"\n",
+        "contents": "[source.vendored-sources]\ndirectory = \"cargo/vendor\"\n\n[source.crates-io]\nreplace-with = \"vendored-sources\"\n\n[source.\"https://github.com/danielmigueltejedor/vinilo\"]\ngit = \"https://github.com/danielmigueltejedor/vinilo\"\nreplace-with = \"vendored-sources\"\nrev = \"393463e6a072c8b6fbc046641acf2e0956da4d6e\"\n\n[source.\"https://github.com/danielmigueltejedor/nodalia-design\"]\ngit = \"https://github.com/danielmigueltejedor/nodalia-design\"\nreplace-with = \"vendored-sources\"\nrev = \"d066d5d351f18f704bdfd8aad6f04b9e96a155e4\"\n\n[source.\"nodalia-design-update\"]\ngit = \"https://github.com/danielmigueltejedor/nodalia-design\"\nreplace-with = \"vendored-sources\"\nrev = \"114848a2ff1a7c29c9a5432fb12e955fbe0aeef2\"\n",
         "dest": "cargo",
         "dest-filename": "config"
     }
