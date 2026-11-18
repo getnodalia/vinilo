@@ -90,11 +90,13 @@ impl AppModel {
             return;
         }
         self.updates.busy = true;
+        // The language is the GTK thread's, so it is read here rather than on the worker.
+        let language = notes_language(i18n::current());
         sender.oneshot_command(async move {
             let result = tokio::task::spawn_blocking(|| nu::check(&APP))
                 .await
                 .map_err(|e| e.to_string())
-                .and_then(|r| r.map_err(|e| e.to_string()));
+                .and_then(|r| r.map_err(|e| e.describe(language)));
             CommandMsg::UpdateChecked { user, result }
         });
     }
@@ -195,6 +197,7 @@ impl AppModel {
         dialog.present(Some(root));
         self.updates.progress = Some((dialog, bar));
 
+        let language = notes_language(i18n::current());
         sender.command(move |out, shutdown| {
             shutdown
                 .register(async move {
@@ -218,7 +221,7 @@ impl AppModel {
                     })
                     .await
                     .map_err(|e| e.to_string())
-                    .and_then(|r| r.map_err(|e| e.to_string()));
+                    .and_then(|r| r.map_err(|e| e.describe(language)));
                     let _ = out.send(CommandMsg::UpdateInstalled(result));
                 })
                 .drop_on_shutdown()
