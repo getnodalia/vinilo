@@ -82,10 +82,7 @@ pub(super) fn pin_lives_in_library(id: &str) -> bool {
         return false;
     }
     let yt = id.strip_prefix("yt:playlist:").unwrap_or("");
-    if yt.starts_with("RD") || yt.starts_with("OLAK") {
-        return false;
-    }
-    true
+    !(yt.starts_with("RD") || yt.starts_with("OLAK"))
 }
 
 /// Where a drop on `row` lands, in the list's *original* coordinates.
