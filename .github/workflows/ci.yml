@@ -62,6 +62,9 @@ jobs:
 
   macos:
     name: macOS · clippy · tests · DMG
+    # macOS slots are kept for releases: only on a tag or by hand, never on pull requests or
+    # pushes to main (the release builds them through release.yml).
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
     # Apple Silicon. Homebrew's GTK is built for the runner's own macOS, so the
     # DMG needs that version or newer; Info.plist says which.
     runs-on: macos-15
@@ -124,6 +127,9 @@ jobs:
 
   macos-native:
     name: macOS · Vinilo Native · tests · DMG
+    # macOS slots are kept for releases: only on a tag or by hand, never on pull requests or
+    # pushes to main (the release builds them through release.yml).
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
     # The SwiftUI edition. Xcode 26 is what carries Liquid Glass; the code falls back to plain
     # materials when built with an older SDK, but the DMG people download should have the glass.
     runs-on: macos-26
