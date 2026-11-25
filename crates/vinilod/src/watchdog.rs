@@ -91,7 +91,7 @@ pub fn check(daemon: &Rc<Daemon>, watch: &mut Watch) {
     // loaded but never started has no current item), so somebody coming back to
     // a stopped player deserves to know why rather than guessing.
     daemon.publish(Event::Error {
-        detail: "Playback stopped responding — the player was restarted".into(),
+        detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonPlaybackRestarted).into(),
     });
     // **Killed, not asked.** Closing stdin is how the idle drop puts a healthy
     // sidecar down, and it is useless here: the child has stopped listening, so

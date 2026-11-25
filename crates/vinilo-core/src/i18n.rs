@@ -396,6 +396,19 @@ pub enum Key {
     SpotifyTokenRefused,
     CatalogLoginFailed,
     CatalogLibraryFailed,
+    DaemonNoneStreamable,
+    DaemonClientStillOpen,
+    DaemonOtherSource,
+    DaemonNoAppleToFile,
+    DaemonNothingStreamable,
+    DaemonCantRemovePlaying,
+    DaemonNotSignedIn,
+    DaemonPlaybackRestarted,
+    DaemonNoCacheDir,
+    SpotifyNotOnQueue,
+    SpotifyNotATrack,
+    SpotifyQueueEmpty,
+    SpotifyPremiumRequired,
     SpotifyRateLimited,
     SpotifyTimeout,
     SpotifyCatalogueChanged,
@@ -742,6 +755,19 @@ fn en(key: Key) -> &'static str {
         Key::CatalogLibraryFailed => {
             "Could not load this catalog's library. Try Refresh, or sign in again if this source needs it."
         }
+        Key::DaemonNoneStreamable => "None of these tracks are available to stream",
+        Key::DaemonClientStillOpen => "Another Vinilo client is still open",
+        Key::DaemonOtherSource => "Those tracks belong to another music source",
+        Key::DaemonNoAppleToFile => "Can't add Apple Music tracks to a file that's playing",
+        Key::DaemonNothingStreamable => "Nothing here can be streamed",
+        Key::DaemonCantRemovePlaying => "Can't remove the track that's playing",
+        Key::DaemonNotSignedIn => "Not signed in yet",
+        Key::DaemonPlaybackRestarted => "Playback stopped responding — the player was restarted",
+        Key::DaemonNoCacheDir => "No cache directory",
+        Key::SpotifyNotOnQueue => "That track is not on the Spotify queue",
+        Key::SpotifyPremiumRequired => "Spotify Premium is required for native playback",
+        Key::SpotifyNotATrack => "That is not a Spotify track",
+        Key::SpotifyQueueEmpty => "The Spotify queue is empty",
         Key::SpotifyRateLimited => "Spotify asked us to wait. Try Reload in a minute.",
         Key::SpotifyTimeout => "Spotify did not answer in time. Try again.",
         Key::SpotifyCatalogueChanged => {
@@ -1070,6 +1096,23 @@ fn es(key: Key) -> &'static str {
         Key::CatalogLibraryFailed => {
             "No se pudo cargar la biblioteca de este catálogo. Prueba Actualizar, o vuelve a iniciar sesión si esta fuente lo pide."
         }
+        Key::DaemonNoneStreamable => "Ninguna de estas canciones se puede reproducir en streaming",
+        Key::DaemonClientStillOpen => "Hay otra ventana de Vinilo abierta",
+        Key::DaemonOtherSource => "Esas canciones son de otra fuente de música",
+        Key::DaemonNoAppleToFile => {
+            "No se pueden añadir canciones de Apple Music a un archivo que se está reproduciendo"
+        }
+        Key::DaemonNothingStreamable => "No hay nada que se pueda reproducir en streaming aquí",
+        Key::DaemonCantRemovePlaying => "No se puede quitar la canción que está sonando",
+        Key::DaemonNotSignedIn => "Aún no has iniciado sesión",
+        Key::DaemonPlaybackRestarted => {
+            "La reproducción dejó de responder: se reinició el reproductor"
+        }
+        Key::DaemonNoCacheDir => "No hay carpeta de caché",
+        Key::SpotifyNotOnQueue => "Esa canción no está en la cola de Spotify",
+        Key::SpotifyPremiumRequired => "Hace falta Spotify Premium para la reproducción nativa",
+        Key::SpotifyNotATrack => "Eso no es una canción de Spotify",
+        Key::SpotifyQueueEmpty => "La cola de Spotify está vacía",
         Key::SpotifyRateLimited => {
             "Spotify pide que esperemos. Prueba Recargar dentro de un minuto."
         }
@@ -1429,5 +1472,46 @@ mod tests {
         assert_eq!(Language::from_locale_tag("en_GB.UTF-8"), Language::English);
         assert_eq!(Language::from_locale_tag("fr_FR"), Language::English);
         assert_eq!(Language::from_locale_tag(""), Language::English);
+    }
+
+    /// What the daemon says to the person goes through [`t`]: a sentence written inline in
+    /// `detail: "…"` or `bail!("…")` reaches the toast in English whatever the language is.
+    /// Diagnostics for the log (HTTP statuses, protocol names) are not sentences and stay out.
+    #[test]
+    fn the_daemon_says_nothing_to_the_person_in_a_literal() {
+        let sources = [
+            ("serve.rs", include_str!("../../vinilod/src/serve.rs")),
+            ("watchdog.rs", include_str!("../../vinilod/src/watchdog.rs")),
+            (
+                "spotify_play.rs",
+                include_str!("../../vinilod/src/spotify_play.rs"),
+            ),
+        ];
+        let mut found = Vec::new();
+        for (file, source) in sources {
+            let code = source.split("#[cfg(test)]").next().unwrap_or(source);
+            for (n, line) in code.lines().enumerate() {
+                let line = line.trim();
+                let literal = line
+                    .strip_prefix("detail: \"")
+                    .or_else(|| line.strip_prefix("bail!(\""));
+                let prose = literal.is_some_and(|rest| {
+                    rest.split(['"', '{'])
+                        .next()
+                        .is_some_and(|w| w.split(' ').filter(|w| w.len() > 2).count() >= 3)
+                });
+                if prose
+                    && !line.contains("unreadable request")
+                    && !line.contains("missing playlist id")
+                {
+                    found.push(format!("{file}:{}: {line}", n + 1));
+                }
+            }
+        }
+        assert!(
+            found.is_empty(),
+            "English sentences shown to the person without `t`:\n{}",
+            found.join("\n")
+        );
     }
 }

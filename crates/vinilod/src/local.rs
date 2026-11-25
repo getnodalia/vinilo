@@ -251,7 +251,9 @@ impl Player {
         index: usize,
     ) -> Result<(), String> {
         if hits.is_empty() {
-            return Err("Nothing here can be streamed".into());
+            return Err(
+                vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNothingStreamable).into(),
+            );
         }
         let queue: Vec<Track> = hits
             .iter()

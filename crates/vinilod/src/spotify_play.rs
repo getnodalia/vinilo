@@ -114,7 +114,10 @@ async fn require_premium(session: &Session) -> Result<()> {
                 return Ok(());
             }
             session.shutdown();
-            bail!("Spotify Premium is required for native playback");
+            bail!(
+                "{}",
+                vinilo_core::i18n::t(vinilo_core::i18n::Key::SpotifyPremiumRequired)
+            );
         }
         if tokio::time::Instant::now() >= deadline {
             // Spotify sometimes answers late; try playing rather than blocking.
@@ -131,7 +134,10 @@ fn track_id(hit: &StreamHit) -> Result<String> {
         .context("not a Spotify track id")?;
     let id = rest.strip_prefix("track:").unwrap_or(rest);
     if id.is_empty() || id.contains(':') {
-        bail!("not a Spotify track id");
+        bail!(
+            "{}",
+            vinilo_core::i18n::t(vinilo_core::i18n::Key::SpotifyNotATrack)
+        );
     }
     Ok(id.to_owned())
 }
@@ -181,7 +187,10 @@ impl Engine {
         vocal: f64,
     ) -> Result<Self> {
         if queue.is_empty() {
-            bail!("empty Spotify queue");
+            bail!(
+                "{}",
+                vinilo_core::i18n::t(vinilo_core::i18n::Key::SpotifyQueueEmpty)
+            );
         }
         let session = match restore().await? {
             Some(session) => session,
@@ -347,10 +356,16 @@ impl Engine {
 
     pub fn remove(&mut self, index: usize) -> Result<()> {
         if index >= self.queue.len() {
-            bail!("That track is not on the Spotify queue");
+            bail!(
+                "{}",
+                vinilo_core::i18n::t(vinilo_core::i18n::Key::SpotifyNotOnQueue)
+            );
         }
         if index == self.index {
-            bail!("Can't remove the track that's playing");
+            bail!(
+                "{}",
+                vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonCantRemovePlaying)
+            );
         }
         self.queue.remove(index);
         if index < self.index {
@@ -361,7 +376,10 @@ impl Engine {
 
     pub fn move_item(&mut self, from: usize, to: usize) -> Result<()> {
         if from >= self.queue.len() {
-            bail!("That track is not on the Spotify queue");
+            bail!(
+                "{}",
+                vinilo_core::i18n::t(vinilo_core::i18n::Key::SpotifyNotOnQueue)
+            );
         }
         let item = self.queue.remove(from);
         let to = to.min(self.queue.len());
@@ -390,7 +408,10 @@ impl Engine {
 
     pub fn jump(&mut self, index: usize) -> Result<()> {
         if index >= self.queue.len() {
-            bail!("That track is not on the Spotify queue");
+            bail!(
+                "{}",
+                vinilo_core::i18n::t(vinilo_core::i18n::Key::SpotifyNotOnQueue)
+            );
         }
         self.index = index;
         self.position_ms = 0;
