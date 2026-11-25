@@ -692,7 +692,7 @@ fn retry_without_dead_tracks(daemon: &Daemon, detail: &str) -> bool {
         .collect();
     if retry.is_empty() {
         daemon.publish(Event::Error {
-            detail: "None of these tracks are available to stream".into(),
+            detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNoneStreamable).into(),
         });
         return true;
     }
@@ -1249,7 +1249,8 @@ fn answer(
             // observer is not one.
             if daemon.clients.get().saturating_sub(daemon.observers.get()) > 1 {
                 return Some(Event::Error {
-                    detail: "Another Vinilo client is still open".into(),
+                    detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonClientStillOpen)
+                        .into(),
                 });
             }
             tracing::info!("a client asked to quit");
@@ -1273,7 +1274,8 @@ fn answer(
                     .collect();
                 if songs.is_empty() {
                     return Some(Event::Error {
-                        detail: "Those tracks belong to another music source".into(),
+                        detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonOtherSource)
+                            .into(),
                     });
                 }
                 if provider.needs_apple() && daemon.sidecar.borrow().is_none() {
@@ -1309,7 +1311,8 @@ fn answer(
             }
             if daemon.local.borrow().is_active() {
                 return Some(Event::Error {
-                    detail: "Can't add Apple Music tracks to a file that's playing".into(),
+                    detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNoAppleToFile)
+                        .into(),
                 });
             }
             // Filtered, because a dead id rejects the whole insert the same way
@@ -1323,7 +1326,8 @@ fn answer(
                 .collect();
             if songs.is_empty() {
                 return Some(Event::Error {
-                    detail: "Nothing here can be streamed".into(),
+                    detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNothingStreamable)
+                        .into(),
                 });
             }
             tracing::info!(count = songs.len(), next, "enqueueing");
@@ -1374,7 +1378,8 @@ fn answer(
             let model = daemon.model.borrow();
             if index == model.player.queue_position && !model.player.queue.is_empty() {
                 return Some(Event::Error {
-                    detail: "Can't remove the track that's playing".into(),
+                    detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonCantRemovePlaying)
+                        .into(),
                 });
             }
             drop(model);
@@ -1965,7 +1970,7 @@ fn write(
 
     let Some(client) = daemon.client() else {
         daemon.publish(Event::Error {
-            detail: "Not signed in yet".into(),
+            detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNotSignedIn).into(),
         });
         return;
     };
@@ -2000,7 +2005,7 @@ fn write_apple_playlist(
 ) {
     let Some(client) = daemon.client() else {
         daemon.publish(Event::Error {
-            detail: "Not signed in yet".into(),
+            detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNotSignedIn).into(),
         });
         return;
     };
@@ -2853,7 +2858,7 @@ fn search(daemon: &Rc<Daemon>, query: String, filter: CatalogFilter, offset: usi
     }
     let Some(client) = daemon.client() else {
         daemon.publish(Event::Error {
-            detail: "Not signed in yet".into(),
+            detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNotSignedIn).into(),
         });
         return;
     };
@@ -3044,7 +3049,8 @@ fn play_streams(daemon: &Rc<Daemon>, ids: Vec<String>, index: usize, start: Star
         }
         if hits.is_empty() {
             daemon.publish(Event::Error {
-                detail: "Nothing here can be streamed".into(),
+                detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNothingStreamable)
+                    .into(),
             });
             return;
         }
@@ -3101,7 +3107,7 @@ fn play_streams(daemon: &Rc<Daemon>, ids: Vec<String>, index: usize, start: Star
         let mut rest = hits;
         let Some(dir) = vinilo_core::paths::cache_dir().map(|p| p.join("streams")) else {
             daemon.publish(Event::Error {
-                detail: "No cache directory".into(),
+                detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNoCacheDir).into(),
             });
             return;
         };
@@ -3630,7 +3636,7 @@ fn open_page(daemon: &Rc<Daemon>, kind: PageKind, id: String) {
     let Some(client) = daemon.client() else {
         if vinilo_core::page_cache::load(kind, &id).is_none() {
             daemon.publish(Event::Error {
-                detail: "Not signed in yet".into(),
+                detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNotSignedIn).into(),
             });
         }
         return;
@@ -3793,7 +3799,7 @@ fn play(daemon: &Daemon, ids: &[String], index: usize, start: Start) {
     let (songs, start_id) = queue_from_ids(&visible, row, &dead);
     if songs.is_empty() {
         daemon.publish(Event::Error {
-            detail: "Nothing here can be streamed".into(),
+            detail: vinilo_core::i18n::t(vinilo_core::i18n::Key::DaemonNothingStreamable).into(),
         });
         return;
     }
